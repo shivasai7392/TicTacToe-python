@@ -1,15 +1,18 @@
 from src.models.Board import Board
+from src.models.CellStatus import CellStatus
+from src.models.GameStatus import GameStatus
+from src.models.Move import Move
 from src.models.PlayerType import PlayerType
 
 
 class Game:
     def __init__(self, dimension, players, winningStrategies):
-        self._moves = None
+        self._moves = []
         self._board = Board(dimension)
         self._players = players
         self._currentPlayerIndex = 0
         self._winningStrategies = winningStrategies
-        self._gameStatus = None
+        self._gameStatus = GameStatus.IN_PROGRESS
         self._winner = None
 
     @property
@@ -67,6 +70,68 @@ class Game:
     @winner.setter
     def winner(self, value):
         self._winner = value
+
+    def printBoard(self):
+        self.board.print()
+
+    def undo(self):
+        if len(self.moves) == 0:
+            print("Undo option is not available")
+            return
+        move = self.moves[-1]
+        cell = move.cell
+        row = cell.row
+        col = cell.col
+        grid = self.board.grid
+        grid_cell = grid[row][col]
+        grid_cell.cellStatus = CellStatus.EMPTY
+        grid_cell.player = None
+
+        for strategy in self.winningStrategies:
+            strategy.undo(move)
+
+        self.moves.pop()
+
+        self.currentPlayerIndex -= 1
+        self.currentPlayerIndex += (self.board.size-1)
+        self.currentPlayerIndex %= (self.board.size-1)
+
+    def makeMove(self):
+        player = self.players[self.currentPlayerIndex]
+        print(player.name+"'s Turn.")
+        proposed_cell = player.makeMove(self.board)
+        if not self.validateMove(proposed_cell):
+            print("Invalid Move.")
+            return
+        actual_cell = self.board.grid[proposed_cell.row][proposed_cell.col]
+        actual_cell.row = proposed_cell.row
+        actual_cell.col = proposed_cell.col
+        actual_cell.cellStatus = CellStatus.FILLED
+        actual_cell.player = player
+
+        move = Move(player, proposed_cell)
+        self.moves.append(move)
+
+        for strategy in self.winningStrategies:
+            if strategy.checkWinner(move):
+                self.winner = player
+                self.gameStatus = GameStatus.ENDED
+                return
+
+        self.currentPlayerIndex += 1
+        self.currentPlayerIndex %= (self.board.size - 1)
+
+        if len(self.moves) == self.board.size**2:
+            self.gameStatus = GameStatus.DRAW
+            return
+
+    def validateMove(self, cell):
+        if cell.row < 0 or cell.row >= self.board.size or cell.col < 0 or cell.col >= self.board.size or self.board.grid[cell.row][cell.col].cellStatus == CellStatus.FILLED:
+            return False
+        return True
+
+    def printWinner(self):
+        print(self.winner.name+" had won the game.")
 
     class Builder:
 

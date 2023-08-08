@@ -1,6 +1,6 @@
 class Symbol:
-    def __init__(self):
-        self._shape = None
+    def __init__(self, shape):
+        self._shape = shape
 
     @property
     def shape(self):

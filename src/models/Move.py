@@ -1,7 +1,7 @@
 class Move:
-    def __init__(self):
-        self._player = None
-        self._cell = None
+    def __init__(self, player, cell):
+        self._player = player
+        self._cell = cell
 
     @property
     def player(self):

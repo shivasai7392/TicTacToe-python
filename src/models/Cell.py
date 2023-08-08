@@ -1,8 +1,11 @@
+from src.models.CellStatus import CellStatus
+
+
 class Cell:
-    def __init__(self):
-        self._row = 0
-        self._col = 0
-        self._cellStatus = None
+    def __init__(self, row, col):
+        self._row = row
+        self._col = col
+        self._cellStatus = CellStatus.EMPTY
         self._player = None
 
     @property
@@ -36,3 +39,9 @@ class Cell:
     @player.setter
     def player(self, value):
         self._player = value
+
+    def print(self):
+        if self.cellStatus == CellStatus.EMPTY:
+            print("-|", end="")
+        else:
+            print(self.player.symbol.shape+"|", end="")

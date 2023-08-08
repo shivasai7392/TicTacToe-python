@@ -27,4 +27,12 @@ class OrderOneDiagonalWinningStrategy(IWinningStrategy):
             else:
                 self.counter[1][shape] = 1
         return False
-    
+
+    def undo(self, move):
+        shape = move.player.symbol.shape
+        col = move.cell.col
+        row = move.cell.row
+        if row == col:
+            self.counter[0][shape] -= 1
+        if row+col == self.dimension - 1:
+            self.counter[1][shape] -= 1

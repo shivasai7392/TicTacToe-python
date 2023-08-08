@@ -18,3 +18,8 @@ class OrderOneRowWinningStrategy(IWinningStrategy):
         else:
             self.counter[row][shape] = 1
         return False
+
+    def undo(self, move):
+        shape = move.player.symbol.shape
+        row = move.cell.row
+        self.counter[row][shape] -= 1

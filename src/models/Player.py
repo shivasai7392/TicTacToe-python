@@ -1,8 +1,11 @@
+from src.models.Cell import Cell
+
+
 class Player:
-    def __init__(self):
-        self._name = None
-        self._symbol = None
-        self._playerType = None
+    def __init__(self, name, symbol, playerType):
+        self._name = name
+        self._symbol = symbol
+        self._playerType = playerType
 
     @property
     def name(self):
@@ -27,3 +30,11 @@ class Player:
     @playerType.setter
     def playerType(self, value):
         self._playerType = value
+
+    def makeMove(self, board):
+        print("Enter the row value.")
+        row = int(input())
+        print("Enter the col value.")
+        col = int(input())
+
+        return Cell(row, col)

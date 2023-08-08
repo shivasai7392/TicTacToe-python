@@ -9,3 +9,15 @@ class GameController:
                 .setWinningStrategies(winningStrategies).build()
         return game
 
+    def displayBoard(self, game):
+        game.printBoard()
+
+    def undo(self, game):
+        game.undo()
+
+    def makeMove(self, game):
+        game.makeMove()
+
+    def printWinner(self, game):
+        game.printBoard()
+        game.printWinner()

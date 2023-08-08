@@ -1,3 +1,4 @@
+from src.models.CellStatus import CellStatus
 from src.strategies.botplayingstrategies.IBotPlayingStrategy import IBotPlayingStrategy
 
 
@@ -6,5 +7,5 @@ class EasyBotPlayingStrategy(IBotPlayingStrategy):
         grid = board.grid
         for cells in grid:
             for cell in cells:
-                if cell.cellStatus is None:
+                if cell.cellStatus is CellStatus.EMPTY:
                     return cell
